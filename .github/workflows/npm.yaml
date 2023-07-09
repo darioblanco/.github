@@ -9,12 +9,12 @@ on:
         type: string
       botEmail:
         required: false
-        description: The email of the bot that will appear in the GitOps commit
+        description: The email of the bot that will appear in the commit
         default: darioblanco
         type: string
       botName:
         required: false
-        description: The name of the bot that will appear in the GitOps commit
+        description: The name of the bot that will appear in the commit
         default: darioblanco
         type: string
       cacheEnabled:
