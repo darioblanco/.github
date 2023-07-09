@@ -1,0 +1,45 @@
+name: Reusable Terraform
+on:
+  workflow_call:
+    inputs:
+      runner:
+        required: false
+        description: Runner type
+        default: ubuntu-latest
+        type: string
+      tflintConfigPath:
+        required: false
+        description: The path to the tflint configuration
+        default: .tflint.hcl
+        type: string
+    secrets:
+      tfApiToken:
+        required: false
+        description: The Terraform API Token (if using Terraform Cloud)
+jobs:
+  tf:
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Checkout current git repository
+        uses: actions/checkout@v3
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          cli_config_credentials_token: ${{ secrets.tfApiToken }}
+      - name: Terraform Format
+        run: terraform fmt -recursive -check
+      - name: Cache plugin dir
+        uses: actions/cache@v2
+        with:
+          path: ~/.tflint.d/plugins
+          key: tflint-${{ hashFiles('.tflint.hcl') }}
+      - uses: terraform-linters/setup-tflint@v1
+        name: Setup TFLint
+      - name: Init TFLint
+        run: |
+          # shellcheck disable=SC2038
+          tflint --init --recursive -c "$(pwd)/${{ inputs.tflintConfigPath }}"
+      - name: Run TFLint for all Terraform modules
+        run: |
+          # shellcheck disable=SC2038
+          tflint --init --recursive -c "$(pwd)/${{ inputs.tflintConfigPath }}"

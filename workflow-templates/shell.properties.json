@@ -1,0 +1,7 @@
+{
+  "name": "Lint Shell scripts",
+  "description": "Lint Shell scripts with shellcheck.",
+  "iconName": "octicon file",
+  "categories": ["Continuous integration", "Shell"],
+  "filePatterns": [".*\\.sh$"]
+}

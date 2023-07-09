@@ -1,0 +1,13 @@
+{
+  "name": "Test and Deploy a Python app",
+  "description": "Lint, test, build (optionally), release and deploy a Python app.",
+  "iconName": "octicon code",
+  "categories": [
+    "Continuous integration",
+    "Deployment",
+    "Testing",
+    "Code Quality",
+    "Python"
+  ],
+  "filePatterns": ["requirements.txt$", ".*\\.py$"]
+}

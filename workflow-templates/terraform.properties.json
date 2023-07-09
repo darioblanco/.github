@@ -1,0 +1,7 @@
+{
+  "name": "Lint Terraform stacks",
+  "description": "Lint a Terraform stacks or a folder containing multiple stacks.",
+  "iconName": "octicon container",
+  "categories": ["Continuous Integration", "Code Quality", "HCL"],
+  "filePatterns": [".*\\.tf$"]
+}

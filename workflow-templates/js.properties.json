@@ -1,0 +1,20 @@
+{
+  "name": "Test and Deploy a JS app",
+  "description": "Lint, test, build (optionally), release and deploy a JS app.",
+  "iconName": "octicon code",
+  "categories": [
+    "Continuous integration",
+    "Deployment",
+    "Testing",
+    "Code Quality",
+    "JavaScript",
+    "TypeScript"
+  ],
+  "filePatterns": [
+    "package.json$",
+    ".*\\.js$",
+    ".*\\.jsx$",
+    ".*\\.ts$",
+    ".*\\.tsx$"
+  ]
+}

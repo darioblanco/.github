@@ -1,0 +1,13 @@
+{
+  "name": "Publish a JS library to NPM",
+  "description": "Publish a JS library manually or based on a git tag (e.g. from a release).",
+  "iconName": "octicon code",
+  "categories": ["Deployment", "JavaScript", "TypeScript"],
+  "filePatterns": [
+    "package.json$",
+    ".*\\.js$",
+    ".*\\.jsx$",
+    ".*\\.ts$",
+    ".*\\.tsx$"
+  ]
+}

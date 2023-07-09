@@ -1,0 +1,6 @@
+{
+  "name": "Check PR quality",
+  "description": "Check that PR follows all standards and add labels based on its content.",
+  "iconName": "octicon git-pull-request",
+  "categories": ["Continuous integration", "Automation"]
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Release short versions",
+  "description": "Push a shortened version (e.g v1) to the main branch.",
+  "iconName": "octicon code",
+  "categories": ["Deployment"]
+}

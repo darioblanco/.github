@@ -1,0 +1,25 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      draft:
+        required: false
+        description: Defines if the release is a draft (not published directly). Defaults to true
+        default: true
+      prerelease:
+        required: false
+        description: Defines if the release to create is a prerelease. Defaults to false
+        default: false
+      targetBranch:
+        required: false
+        description: The target branch for the release being created
+        default: main
+jobs:
+  release:
+    uses: darioblanco/.github/.github/workflows/release.yaml@v1
+    with:
+      draft: ${{ github.event.inputs.draft }}
+      prerelease: ${{ github.event.inputs.prerelease }}
+      targetBranch: ${{ github.event.inputs.targetBranch }}
+    secrets:
+      repoAccessToken: ${{ secrets.REPO_ACCESS_TOKEN }}

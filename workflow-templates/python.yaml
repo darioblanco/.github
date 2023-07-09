@@ -1,0 +1,51 @@
+name: App Python
+on:
+  push:
+    branches:
+      - $default-branch
+    paths:
+      - "**.py"
+      - Containerfile
+      - requirements.txt
+  pull_request:
+    paths:
+      - "**.py"
+      - Containerfile
+      - requirements.txt
+  workflow_dispatch:
+jobs:
+  verify:
+    uses: darioblanco/.github/.github/workflows/python.yaml@v1
+  draft:
+    if: github.ref == 'refs/heads/$default-branch'
+    needs:
+      - verify
+    uses: darioblanco/.github/.github/workflows/release.yaml@v1
+    secrets:
+      repoAccessToken: ${{ secrets.REPO_ACCESS_TOKEN }}
+  staging:
+    if: github.ref == 'refs/heads/$default-branch'
+    needs:
+      - verify
+    uses: darioblanco/.github/.github/workflows/deployment.yaml@v1
+    with:
+      author: ${{ github.event.pusher.name }}
+      description: ${{ toJSON(github.event.head_commit.message) }}
+      env: staging
+      name: myapp
+      ref: ${{ github.ref }}
+    secrets:
+      repoAccessToken: ${{ secrets.REPO_ACCESS_TOKEN }}
+  deploy_to_prod:
+    if: github.ref_type == 'tag'
+    needs:
+      - verify
+    uses: darioblanco/.github/.github/workflows/deployment.yaml@v1
+    with:
+      author: ${{ github.event.pusher.name }}
+      description: ${{ toJSON(github.event.head_commit.message) }}
+      env: prod
+      name: myapp
+      ref: ${{ github.ref }}
+    secrets:
+      repoAccessToken: ${{ secrets.REPO_ACCESS_TOKEN }}

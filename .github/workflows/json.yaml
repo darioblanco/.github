@@ -1,0 +1,19 @@
+name: Reusable JSON
+on:
+  workflow_call:
+    inputs:
+      runner:
+        required: false
+        description: Runner type
+        default: ubuntu-latest
+        type: string
+jobs:
+  json:
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Checkout current git repository
+        uses: actions/checkout@v3
+      - name: Lint JSON
+        uses: actionsx/prettier@v2
+        with:
+          args: --check "**/*.json"

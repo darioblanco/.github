@@ -1,0 +1,8 @@
+name: Update Short Version
+on:
+  push:
+    tags:
+      - "v*"
+jobs:
+  tag:
+    uses: darioblanco/.github/.github/workflows/short-version.yaml@main

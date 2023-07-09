@@ -1,0 +1,63 @@
+name: App JS
+on:
+  push:
+    branches:
+      - $default-branch
+    paths:
+      - "**.js"
+      - "**.jsx"
+      - "**.ts"
+      - "**.tsx"
+      - "**.pegjs"
+      - Containerfile
+      - package.json
+    tags:
+      - "v*"
+  pull_request:
+    paths:
+      - "**.js"
+      - "**.jsx"
+      - "**.ts"
+      - "**.tsx"
+      - "**.pegjs"
+      - Containerfile
+      - package.json
+  workflow_dispatch:
+jobs:
+  verify:
+    uses: darioblanco/.github/.github/workflows/js.yaml@v1
+    secrets:
+      npmGithubReadToken: ${{ secrets.PACKAGES_READ_TOKEN }}
+  draft_release:
+    if: github.ref == 'refs/heads/$default-branch'
+    needs:
+      - verify
+    uses: darioblanco/.github/.github/workflows/release.yaml@v1
+    secrets:
+      repoAccessToken: ${{ secrets.REPO_ACCESS_TOKEN }}
+  deploy_to_staging:
+    if: github.ref == 'refs/heads/$default-branch'
+    needs:
+      - verify
+    uses: darioblanco/.github/.github/workflows/deployment.yaml@v1
+    with:
+      author: ${{ github.event.pusher.name }}
+      description: ${{ toJSON(github.event.head_commit.message) }}
+      env: staging
+      name: myapp
+      ref: ${{ github.ref }}
+    secrets:
+      repoAccessToken: ${{ secrets.REPO_ACCESS_TOKEN }}
+  deploy_to_prod:
+    if: github.ref_type == 'tag'
+    needs:
+      - verify
+    uses: darioblanco/.github/.github/workflows/deployment.yaml@v1
+    with:
+      author: ${{ github.event.pusher.name }}
+      description: ${{ toJSON(github.event.head_commit.message) }}
+      env: prod
+      name: myapp
+      ref: ${{ github.ref }}
+    secrets:
+      repoAccessToken: ${{ secrets.REPO_ACCESS_TOKEN }}

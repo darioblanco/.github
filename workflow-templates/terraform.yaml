@@ -1,0 +1,21 @@
+name: Terraform
+on:
+  push:
+    branches:
+      - $default-branch
+    paths:
+      - .github/workflows/terraform.k8s.yaml
+      - tf/k8s/**
+  pull_request:
+    paths:
+      - .github/workflows/terraform.k8s.yaml
+      - tf/k8s/**
+  workflow_dispatch:
+jobs:
+  lint:
+    uses: darioblanco/.github/.github/workflows/terraform.yaml@v1
+    # with:
+    #   tfFolder: tf/k8s
+    #   tflintConfigPath: tf/.tflint.hcl
+    # secrets:
+    #   tfApiToken: ${{ secrets.TF_API_TOKEN }}

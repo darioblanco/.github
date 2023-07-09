@@ -1,0 +1,7 @@
+{
+  "name": "Build and Publish Container",
+  "description": "Build and publish a Dockerfile or Containerfile image to a registry.",
+  "iconName": "octicon container",
+  "categories": ["Deployment", "Containerfile", "Dockerfile"],
+  "filePatterns": ["^Containerfile$", "^Dockerfile"]
+}

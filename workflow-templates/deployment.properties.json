@@ -1,0 +1,6 @@
+{
+  "name": "Create Github Deployment",
+  "description": "Creates a Github Deployment object from the UI.",
+  "iconName": "octicon rocket",
+  "categories": ["Deployment"]
+}

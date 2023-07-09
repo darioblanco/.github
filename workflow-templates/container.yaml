@@ -1,0 +1,47 @@
+name: Container
+on:
+  push:
+    branches:
+      - $default-branch
+    tags:
+      - "*"
+    paths:
+      - Containerfile
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Container version to push
+        required: true
+jobs:
+  read-version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.vars.outputs.version }}
+    steps:
+      - name: Detect public version from git reference or workflow dispatch
+        id: vars
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = 'workflow_dispatch' ]
+          then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            REF="${{ github.ref }}"
+            CLEAN_REF=${REF##*/}
+            if [[ $CLEAN_REF == '$default-branch' ]]
+            then
+              VERSION="latest"
+            else
+              VERSION="$CLEAN_REF"
+            fi
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+  build-container:
+    needs: read-version
+    uses: darioblanco/.github/.github/workflows/container.yaml@v1
+    with:
+      name: MYAPPNAME
+      # contextPath: .
+      # filePath: Containerfile
+      version: ${{ needs.read-version.outputs.version }}
+    secrets:
+      registryPassword: ${{ secrets.REPO_ACCESS_TOKEN }}

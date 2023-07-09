@@ -1,0 +1,7 @@
+{
+  "name": "Lint JSON files",
+  "description": "Ensure JSON files are consistent.",
+  "iconName": "octicon file",
+  "categories": ["Continuous integration", "JSON"],
+  "filePatterns": [".*\\.json$"]
+}

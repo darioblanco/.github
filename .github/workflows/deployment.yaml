@@ -1,0 +1,67 @@
+name: Reusable Deployment
+on:
+  workflow_call:
+    inputs:
+      author:
+        required: true
+        description: The author of the change that triggers the deployment
+        type: string
+      description:
+        required: true
+        description: The description of the change (e.g. the commit title)
+        type: string
+      env:
+        required: true
+        description: The application environment. Can be test, staging or prod.
+        type: string
+      name:
+        required: true
+        description: The application name.
+        type: string
+      ref:
+        required: false
+        description: The github ref to deploy
+        default: main
+        type: string
+      runner:
+        required: false
+        description: Runner type
+        default: ubuntu-latest
+        type: string
+      statusUrl:
+        required: false
+        description: The url that shows the status of the application
+        type: string
+      url:
+        required: false
+        description: The url where the application is served
+        type: string
+    secrets:
+      repoAccessToken:
+        required: true
+        description: The Github token to perform operations cross-repo (not secrets.GITHUB_TOKEN!)
+jobs:
+  deploy:
+    runs-on: ${{ inputs.runner }}
+    steps:
+      - name: Checkout current git repository
+        uses: actions/checkout@v3
+      - name: Create Github ${{ fromJSON(steps.values.outputs.result).name }} deployment
+        uses: chrnorm/deployment-action@v2
+        with:
+          auto-merge: false
+          environment: ${{ inputs.env }}
+          ref: ${{ inputs.ref }}
+          required-contexts: ""
+          payload: |
+            {
+              "author": ${{ toJSON(inputs.author) }},
+              "description": ${{ toJSON(inputs.description) }},
+              "env": ${{ toJSON(inputs.env) }},
+              "name": ${{ toJSON(inputs.name) }},
+              "statusUrl": ${{ toJSON(inputs.statusUrl) }},
+              "url": ${{ toJSON(inputs.url) }}
+            }
+          production-environment: "${{ inputs.env == 'prod' }}"
+          transient-environment: "${{ inputs.env == 'test' }}"
+          token: ${{ secrets.repoAccessToken }}
