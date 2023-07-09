@@ -1,22 +1,22 @@
 build:
   - "Makefile"
+  - "pyproject.toml"
   - "**/tsconfig.*"
   - "tsconfig.*"
 ci:
   - ".github/workflows/*"
-  - ".github/workflows/**/*"
 deps:
   - "go.mod"
   - "go.sum"
   - "package.json"
   - "package-lock.json"
   - "poetry.lock"
+  - "renovate.json"
   - "requirements.txt"
 deployment:
   - ".dockerignore"
   - "Containerfile"
   - "Dockerfile"
-  - "plconfig.yaml"
 docs:
   - "CODEOWNERS"
   - "*.md"
@@ -32,6 +32,8 @@ style:
   - ".eslintrc.js"
   - ".prettierignore"
   - ".prettierrc.json"
+  - ".pre-commit-config.yaml"
+  - ".pre-commit-hook.sh"
 test:
   - "**/*.spec.js"
   - "**/*.spec.ts"
@@ -39,6 +41,9 @@ test:
   - "**/*.test.ts"
   - "**/__test__/*"
   - "**/__test__/**/*"
+  - "**/test_*.py"
+  - "**/tests/*"
+  - "**/tests/**/*"
 yaml:
   - "*.yaml"
   - "*.yml"
