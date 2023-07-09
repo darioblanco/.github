@@ -31,6 +31,8 @@ jobs:
           # shellcheck disable=SC2086,SC2296
           git tag -f ${{ steps.vars.outputs.shortVersion }} ${{ github.ref }}
       - name: Push new tag
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           # shellcheck disable=SC2086
           git push origin ${{ steps.vars.outputs.shortVersion }} --force

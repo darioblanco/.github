@@ -46,7 +46,7 @@ jobs:
     steps:
       - name: Checkout current git repository
         uses: actions/checkout@v3
-      - name: Create Github ${{ fromJSON(steps.values.outputs.result).name }} deployment
+      - name: Create Github ${{ inputs.name }} deployment
         uses: chrnorm/deployment-action@v2
         with:
           auto-merge: false
