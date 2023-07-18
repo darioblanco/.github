@@ -21,6 +21,11 @@ on:
         required: true
         description: The container image name
         type: string
+      platforms:
+        required: false
+        description: The target platforms the image will be built into
+        default: linux/amd64,linux/arm64
+        type: string
       registryHostname:
         required: false
         description: The hostname for the container registry
@@ -74,7 +79,7 @@ jobs:
           cache-to: type=inline
           context: ${{ inputs.contextPath }}
           file: ${{ inputs.filePath }}
-          platforms: linux/amd64
+          platforms: ${{ inputs.platforms }}
           push: true
           tags: |
             ${{ inputs.registryHostname }}/${{ inputs.registryOrg }}/${{ inputs.name }}:latest
