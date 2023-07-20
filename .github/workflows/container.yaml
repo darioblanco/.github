@@ -47,8 +47,9 @@ on:
         default: ubuntu-latest
         type: string
       version:
-        required: true
-        description: The version to push
+        required: false
+        description: The specific version to push (will be added to the automated ones)
+        default: ""
         type: string
     secrets:
       registryPassword:
@@ -60,6 +61,28 @@ jobs:
     steps:
       - name: Checkout current git repository
         uses: actions/checkout@v3
+      - name: Prepare
+        id: prep
+        run: |
+          BRANCH=${GITHUB_REF##*/}
+          TS=$(date +%s)
+          REVISION=${GITHUB_SHA::8}
+          BUILD_ID="${BRANCH}-${REVISION}-${TS}"
+          LATEST_ID=canary
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            BUILD_ID=${GITHUB_REF/refs\/tags\//}
+            LATEST_ID=latest
+          fi
+          if [[ "${{ inputs.version }}" != "" ]]; then
+            LATEST_ID=${{ inputs.version }}
+          fi
+          {
+            echo build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo build_id="${BUILD_ID}"
+            echo latest_id="${LATEST_ID}"
+           } >> "$GITHUB_OUTPUT"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Login to Container Registry
@@ -70,6 +93,7 @@ jobs:
           password: ${{ secrets.registryPassword }}
       - name: Build and push latest version
         uses: docker/build-push-action@v4
+        id: docker_build
         with:
           build-args: |
             GITHUB_SHA=${{ github.sha }}
@@ -82,6 +106,8 @@ jobs:
           platforms: ${{ inputs.platforms }}
           push: true
           tags: |
-            ${{ inputs.registryHostname }}/${{ inputs.registryOrg }}/${{ inputs.name }}:latest
-            ${{ inputs.registryHostname }}/${{ inputs.registryOrg }}/${{ inputs.name }}:${{ inputs.version }}
             ${{ inputs.registryHostname }}/${{ inputs.registryOrg }}/${{ inputs.name }}:${{ github.sha }}
+            ${{ inputs.registryHostname }}/${{ inputs.registryOrg }}/${{ inputs.name }}:${{ steps.prep.outputs.build_id }}
+            ${{ inputs.registryHostname }}/${{ inputs.registryOrg }}/${{ inputs.name }}:${{ steps.prep.outputs.latest_id }}
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
