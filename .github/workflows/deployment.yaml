@@ -45,7 +45,7 @@ jobs:
     runs-on: ${{ inputs.runner }}
     steps:
       - name: Checkout current git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Create Github ${{ inputs.name }} deployment
         uses: chrnorm/deployment-action@v2
         with:
